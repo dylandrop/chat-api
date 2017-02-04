@@ -3,8 +3,7 @@ class SessionsController < ApplicationController
     user = User.find_by(email: session_params[:email])
     return head(:not_found) unless user
 
-    if user.valid_password?(session_params[:password])
-      sign_in(user)
+    if user.authenticate(session_params[:password])
       head :no_content
     else
       render json: { errors: [I18n.t('sessions.invalid_password')] }, status: 400
