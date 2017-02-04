@@ -4,7 +4,8 @@ class SessionsController < ApplicationController
     return head(:not_found) unless user
 
     if user.authenticate(session_params[:password])
-      head :no_content
+      user.regenerate_api_auth_token
+      render json: { api_auth_token: user.api_auth_token }
     else
       render json: { errors: [I18n.t('sessions.invalid_password')] }, status: 400
     end
