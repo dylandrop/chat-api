@@ -9,7 +9,7 @@ class MessagesController < ApplicationController
 
   private
 
-  def required_params
+  def optional_params
     params.permit(:with, :subject)
   end
 
@@ -19,10 +19,13 @@ class MessagesController < ApplicationController
   end
 
   def load_conversations
-    fetch_current_user.conversations
-      .with(
-        email: required_params[:with],
-        subject: required_params[:subject]
+    conversations = fetch_current_user.conversations
+    if optional_params.present?
+      conversations = conversations.with(
+        email: optional_params[:with],
+        subject: optional_params[:subject]
       )
+    end
+    conversations
   end
 end
