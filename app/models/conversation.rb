@@ -9,4 +9,12 @@ class Conversation < ApplicationRecord
     end
     conversations
   end
+
+  def self.create_for_users!(subject: nil, users:)
+    create!(subject: subject).tap do |conversation|
+      users.each do |user|
+        conversation.users << user
+      end
+    end
+  end
 end

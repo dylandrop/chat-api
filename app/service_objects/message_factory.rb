@@ -22,17 +22,16 @@ class MessageFactory
   attr_reader :from, :to_user_with_email, :content, :subject
 
   def load_conversation
-    conversations = from.conversations.joins(:users)
-      .where(users: { email: to_user_with_email })
-    conversations = conversations.where(subject: subject) if subject.present?
-    conversations.first
+    conversations = from.conversations.with(
+      email: to_user_with_email, subject: subject
+    ).first
   end
 
   def create_new_conversation!
-    Conversation.create!(subject: subject).tap do |conversation|
-      conversation.users << from
-      conversation.users << User.find_by!(email: to_user_with_email)
-    end
+    Conversation.create_for_users!(
+      subject: subject,
+      users: [from, User.find_by!(email: to_user_with_email)]
+    )
   end
 
   def create_message_in_conversation(conversation)
