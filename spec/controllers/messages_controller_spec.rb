@@ -42,4 +42,39 @@ describe MessagesController do
       end
     end
   end
+
+  describe '#create' do
+    subject { post :create, params: params }
+
+    let(:params) do
+      {
+        message: {
+          to_user_with_email: "test@test123.com",
+          subject: "Hey",
+          content: "First message"
+        }
+      }
+    end
+
+    context 'success' do
+      specify do
+        expect(MessageFactory).to receive(:create)
+          .with({
+            from: user,
+            to_user_with_email: "test@test123.com",
+            subject: "Hey",
+            content: "First message"
+          }).and_return(true)
+        expect(subject.status).to eq(201)
+      end
+    end
+
+    context 'failure' do
+      before { allow(MessageFactory).to receive(:create) { false } }
+
+      specify do
+        expect(subject.status).to eq(400)
+      end
+    end
+  end
 end
