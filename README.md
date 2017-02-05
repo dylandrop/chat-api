@@ -1,5 +1,26 @@
 # README
 
+## Background
+
+This is a simple chat app that allows users to message each other using their email address as usernames. Messages are designated into different conversations based on subjects. A user is allowed to have more than one conversation with the same recipient but on different subjects.
+
+## Local setup
+
+```
+bundle
+bin/rake db:create db:migrate db:test:prepare
+```
+
+For now, you must also seed users. In the example app on Heroku, I've added the following users:
+
+```
+dylandrop@gmail.com
+fred@example.com
+john@example.com
+```
+
+All with password `password`.
+
 ## API usage
 
 The following sections cover signing in, messaging users, and seeing all your messages via cURL.
@@ -67,6 +88,10 @@ Example response:
   }
 ]
 ```
+
+## Testing
+
+Simply run `rspec spec/`. This runs all unit tests and request specs (under `spec/requests`). Note, the request specs require a test database to be set up (`bin/rake db:test:prepare`) because they test the full API stack. 
 
 ## Future improvements
 
