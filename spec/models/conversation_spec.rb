@@ -45,7 +45,7 @@ describe Conversation do
     end
   end
 
-  describe '.create_for_users!' do
+  describe '.create_for_users' do
     let(:users) { [user1, user2] }
     let(:user1) { build_stubbed(:user) }
     let(:user2) { build_stubbed(:user) }
@@ -53,7 +53,7 @@ describe Conversation do
     let(:newly_created_conversation) { build_stubbed(:conversation) }
 
     subject do
-      described_class.create_for_users!(
+      described_class.create_for_users(
         subject: conversation_subject,
         users: users
       )
@@ -61,7 +61,7 @@ describe Conversation do
 
     specify do
       expect(described_class)
-        .to receive(:create!)
+        .to receive(:create)
         .with(subject: conversation_subject)
         .and_return(newly_created_conversation)
       result = subject

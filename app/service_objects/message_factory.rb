@@ -12,7 +12,7 @@ class MessageFactory
 
   def create
     ApplicationRecord.transaction do
-      conversation = load_conversation || create_new_conversation!
+      conversation = load_conversation || create_new_conversation
       create_message_in_conversation(conversation)
     end
   end
@@ -27,17 +27,17 @@ class MessageFactory
     ).first
   end
 
-  def create_new_conversation!
-    Conversation.create_for_users!(
+  def create_new_conversation
+    Conversation.create_for_users(
       subject: subject,
       users: [from, User.find_by!(email: to_user_with_email)]
-    )
+    ) || raise(ActiveRecord::Rollback)
   end
 
   def create_message_in_conversation(conversation)
-    conversation.messages.create!(
+    conversation.messages.create(
       user: from,
       content: content
-    )
+    ) || raise(ActiveRecord::Rollback)
   end
 end
