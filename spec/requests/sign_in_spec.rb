@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Sign in and get auth token', type: :request do
-  subject { post "/sessions", params, headers }
+  subject { post "/sessions", params: params, headers: headers }
   let!(:user) { create(:user, email: email, password: password, name: "Bob Smith") }
   let(:email) { 'a@b.c' }
   let(:password) { 'password' }
