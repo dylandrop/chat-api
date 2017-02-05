@@ -3,8 +3,8 @@ class MessagesController < ApplicationController
 
   def index
     messages = load_messages
-    return head(404) unless messages.present?
-    render json: messages, status: 200, each_serializer: MessageSerializer
+    return head(:not_found) unless messages.present?
+    render json: messages, status: :ok, each_serializer: MessageSerializer
   end
 
   def create
@@ -18,7 +18,7 @@ class MessagesController < ApplicationController
     if message
       render json: message, status: :created
     else
-      head(400)
+      head(:bad_request)
     end
   end
 

@@ -33,5 +33,14 @@ describe SessionsController do
         expect(JSON.parse(subject.body)['errors']).to be_present
       end
     end
+
+    context 'email not found' do
+      specify do
+        expect(User).to receive(:find_by).with(email: "a@b.c") {
+          nil
+        }
+        expect(subject.status).to eq(404)
+      end
+    end
   end
 end

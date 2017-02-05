@@ -14,6 +14,6 @@ class ApplicationController < ActionController::API
   end
 
   def render_not_found
-    head(404)
+    head(:not_found)
   end
 end

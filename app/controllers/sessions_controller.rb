@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
       user.regenerate_api_auth_token
       render json: { api_auth_token: user.api_auth_token }
     else
-      render json: { errors: [I18n.t('sessions.invalid_password')] }, status: 400
+      render json: { errors: [I18n.t('sessions.invalid_password')] }, status: :bad_request
     end
   end
 
