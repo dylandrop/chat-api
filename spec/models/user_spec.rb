@@ -8,7 +8,7 @@ describe User do
       it 'fails for blank content' do
         user.valid?
         expect(user.errors[:email]).not_to be_blank
-        expect(user.errors[:password]).not_to be_blank
+        expect(user.errors[:password_digest]).not_to be_blank
         expect(user.errors[:name]).not_to be_blank
       end
     end

@@ -5,5 +5,5 @@ class User < ApplicationRecord
   has_and_belongs_to_many :conversations
   has_many :messages
 
-  validates :name, :email, :password, presence: true
+  validates :name, :email, :password_digest, presence: true
 end
