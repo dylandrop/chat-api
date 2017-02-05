@@ -43,6 +43,22 @@ describe Conversation do
         expect(result).to eq(other_scope)
       end
     end
+
+    context 'when only subject provided' do
+      let(:conversation_subject) { "Something" }
+      let(:email) { nil }
+      let(:other_scope) { class_double(described_class) }
+
+      specify do
+        expect(described_class).to receive(:all)
+          .and_return(returned_scope)
+        expect(returned_scope).to receive(:where)
+          .with(subject: conversation_subject)
+          .and_return(other_scope)
+        result = subject
+        expect(result).to eq(other_scope)
+      end
+    end
   end
 
   describe '.create_for_users' do
