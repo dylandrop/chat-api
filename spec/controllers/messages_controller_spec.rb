@@ -13,17 +13,17 @@ describe MessagesController do
     subject { get :index }
 
     context 'no messages found' do
-      let(:messages) { double(Message, merge: []) }
+      let(:messages) { double(Message, where: []) }
 
       specify do
-        expect(Message).to receive(:eager_load).and_return(messages)
+        expect(Message).to receive(:includes).and_return(messages)
         expect(subject.status).to eq(404)
       end
     end
 
     context 'messages found' do
       let(:message) { Message.new }
-      let(:messages) { double(Message, merge: [message]) }
+      let(:messages) { double(Message, where: [message]) }
       before do
         message.content = "First message"
         message.user = User.new(email: "test@test123.com")
@@ -31,7 +31,7 @@ describe MessagesController do
       end
 
       specify do
-        expect(Message).to receive(:eager_load).and_return(messages)
+        expect(Message).to receive(:includes).and_return(messages)
         expect(subject.status).to eq(200)
         json_response = JSON.parse(response.body)
         expect(json_response).to be_an(Array)

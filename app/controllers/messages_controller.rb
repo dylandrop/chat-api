@@ -35,8 +35,8 @@ class MessagesController < ApplicationController
   end
 
   def load_messages
-    Message.eager_load(:conversation, :user)
-      .merge(load_conversations)
+    Message.includes(:conversation, :user)
+      .where(conversation: load_conversations)
   end
 
   def load_conversations
