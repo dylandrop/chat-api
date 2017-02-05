@@ -21,7 +21,7 @@ RSpec.describe 'Make and see messages', type: :request do
     user.regenerate_api_auth_token
   end
 
-  context 'see all messages' do
+  describe 'see all messages' do
     subject { get "/messages", params: nil, headers: headers }
     let!(:message) { create(:message, user: user, content: expected_content) }
     let(:expected_content) { "blah" }
@@ -34,6 +34,32 @@ RSpec.describe 'Make and see messages', type: :request do
       subject
       json_response = JSON.parse(response.body)
       expect(json_response.first['content']).to eq(expected_content)
+    end
+  end
+
+  describe 'create new message' do
+    subject { post "/messages", params: params, headers: headers }
+    let!(:other_user) { create(:user) }
+    let(:params) do
+      {
+        message: {
+          to_user_with_email: other_user.email,
+          subject: "Hey there",
+          content: "About last night"
+        }
+      }.to_json
+    end
+
+    specify do
+      subject
+      json_response = JSON.parse(response.body)
+      expect(json_response).to eq(
+        {
+          'from' => user.email,
+          'subject' => 'Hey there',
+          'content' => 'About last night'
+        }
+      )
     end
   end
 end
