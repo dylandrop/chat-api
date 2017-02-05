@@ -49,7 +49,7 @@ describe MessagesController do
     let(:params) do
       {
         message: {
-          to_user_with_email: "test@test123.com",
+          to: "test@test123.com",
           subject: "Hey",
           content: "First message"
         }

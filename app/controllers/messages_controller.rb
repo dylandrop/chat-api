@@ -10,7 +10,7 @@ class MessagesController < ApplicationController
   def create
     message = MessageFactory.create(
       from: fetch_current_user,
-      to_user_with_email: message_creation_params[:to_user_with_email],
+      to_user_with_email: message_creation_params[:to],
       subject: message_creation_params[:subject],
       content: message_creation_params[:content]
     )
@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
 
   def message_creation_params
     params.require(:message).permit(
-      :to_user_with_email, :subject, :content
+      :to, :subject, :content
     )
   end
 

@@ -37,13 +37,53 @@ RSpec.describe 'Make and see messages', type: :request do
     end
   end
 
+  describe 'see all messages sent to a specific user with subject' do
+    subject { get "/messages", params: params, headers: headers }
+    let!(:message) { create(:message, user: user, content: expected_content) }
+    let!(:other_message) do
+      create(
+        :message,
+        conversation: other_conversation,
+        user: user,
+        content: unexpected_content
+      )
+    end
+    let(:expected_content) { "blah" }
+    let(:unexpected_content) { "something else" }
+    let(:other_conversation) { create(:conversation, subject: other_subject) }
+    let(:other_subject) { "Other subject" }
+    let(:other_user) { create(:user) }
+
+    let(:params) do
+      {
+        with: other_user.email,
+        subject: message.conversation.subject
+      }
+    end
+
+    before do
+      message.conversation.users << user
+      message.conversation.users << other_user
+
+      other_message.conversation.users << user
+      other_message.conversation.users << other_user
+    end
+
+    specify do
+      subject
+      json_response = JSON.parse(response.body)
+      expect(json_response.first['content']).to eq(expected_content)
+      expect(json_response.map { |r| r['content'] } ).not_to include(unexpected_content)
+    end
+  end
+
   describe 'create new message' do
     subject { post "/messages", params: params, headers: headers }
     let!(:other_user) { create(:user) }
     let(:params) do
       {
         message: {
-          to_user_with_email: other_user.email,
+          to: other_user.email,
           subject: "Hey there",
           content: "About last night"
         }
